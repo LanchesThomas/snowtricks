@@ -10,6 +10,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            security: false
             lazy: true
             provider: users_in_memory
 
