@@ -29,7 +29,7 @@ class Trick
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $userId = null;
+    private ?User $userId = null;
 
     /**
      * @var Collection<int, Comment>

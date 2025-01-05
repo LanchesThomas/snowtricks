@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <style>
+    .register-wrapper {
+        height: 75vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    body {
+        max-height: 100svh;
+    }
+
+    </style>
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+<div class="container-standard">
+<div class="register-wrapper">
+    <h1 class="heading-1">S'inscrire</h1>
+    <div class="col-12 col-md-6 m-auto border p-4 rounded bg-white">
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.mail, {
+            label: "Email"
+        }) }}
+        {{ form_row(registrationForm.username, {
+            label: 'Pseudo'
+            })}}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    {{ form_end(registrationForm) }}
+    
+    </div>
+</div>
+</div>
+
+{% endblock %}

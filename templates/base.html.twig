@@ -9,7 +9,6 @@
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
             <!-- INSERT ROBOT FONT -->
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,13 +18,14 @@
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
+            <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body>
         {% block header %}
             {% include 'header.html.twig' %}
         {% endblock %}
 
-        <main>
+        <main class="mt-[76px]">
         {% block body %}{% endblock %}
         </main>
 

@@ -6,27 +6,39 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
+#[UniqueEntity('username', message: 'Ce pseudo est déjà utilisé.')]
+#[UniqueEntity('mail', message: 'Cet email est déjà utilisé.')]
+#[UniqueEntity('id')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Length(min:5)]
+    #[Assert\NotBlank()]
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
+    #[Assert\NotBlank()]
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
+    #[Assert\Length(min:8)]
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    #[ORM\Column(type: 'json')]
+    private array $role = [];
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -43,6 +55,9 @@ class User
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'userId')]
     private Collection $comments;
 
+    #[ORM\Column]
+    private bool $isVerified = false;
+
     public function __construct()
     {
         $this->tricks = new ArrayCollection();
@@ -57,6 +72,25 @@ class User
     public function getUsername(): ?string
     {
         return $this->username;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->role;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->role = $roles;
+
+        return $this;
     }
 
     public function setUsername(string $username): static
@@ -78,6 +112,16 @@ class User
         return $this;
     }
 
+        /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->mail;
+    }
+
     public function getPassword(): ?string
     {
         return $this->password;
@@ -86,18 +130,6 @@ class User
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
-        return $this;
-    }
-
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): static
-    {
-        $this->role = $role;
 
         return $this;
     }
@@ -144,6 +176,15 @@ class User
         return $this;
     }
 
+        /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
     /**
      * @return Collection<int, Comment>
      */
@@ -170,6 +211,18 @@ class User
                 $comment->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

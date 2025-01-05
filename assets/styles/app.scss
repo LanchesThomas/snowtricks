@@ -7,6 +7,10 @@ $blue: #A8DCD9;
 $montserrat: "Montserrat", sans-serif;
 $roboto :"Roboto", sans-serif;
 
+p {
+    margin: 0;
+}
+
 header {
     position: fixed;
     inset: 0% 0% auto;
@@ -14,9 +18,10 @@ header {
     background-color: $blue;
 }
 
-h1 {
+.heading-1 {
     font-family: $roboto;
     text-transform: uppercase;
+    font-size: 76px;
 }
 
 body {
@@ -56,10 +61,6 @@ body {
         text-decoration: none;
         padding: 5px;
     }
-}
-
-body {
-    margin-top: 55px
 }
 
 footer {

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<style>
+    .register-wrapper {
+        height: 75vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    body {
+        max-height: 100svh;
+    }
+
+</style>
+
+<div class="container-standard">
+    <div class="register-wrapper">
+        <h1 class="heading-1">S'inscrire</h1>
+        <div class="col-12 col-md-6 m-auto border p-4 rounded bg-white">
+            {{ form_start(form) }}
+            <div class="input-wrapper">
+            {{ form_row(form.username, {label: 'Pseudo'})}}
+            </div>
+            <div class="input-wrapper">
+            {{ form_row(form.mail, {label: 'Email'})}}
+            </div>
+            <div class="input-wrapper">
+            {{ form_row(form.password, {label: 'Mot de passe'})}}
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            {{ form_end(form) }}
+            </div>
+    </div>
+</div>
+{% endblock %}

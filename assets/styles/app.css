@@ -1,0 +1,72 @@
+
+p {
+  margin: 0;
+}
+
+header {
+  position: fixed;
+  inset: 0% 0% auto;
+  border-bottom: 1px solid #60435F;
+  background-color: #A8DCD9;
+}
+
+h1 {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+}
+
+body {
+  background-color: #FDF7FA;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 1.125rem;
+}
+
+.container-standard {
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 70px;
+  padding-left: 70px;
+  max-width: 1440px;
+}
+
+.no-pad {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navmenu-wrapper {
+  display: flex;
+  gap: 32px;
+}
+.navmenu-wrapper a {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: black;
+  text-decoration: none;
+  padding: 5px;
+}
+
+body {
+  margin-top: 76px;
+}
+
+.hero-section {
+  padding-top: 25svh;
+  padding-bottom: 25svh;
+  border: 2px solid #A8DCD9;
+}
+
+.hero-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}/*# sourceMappingURL=app.css.map */
