@@ -34,6 +34,7 @@ class RegistrationController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
             $user->setRoles(['ROLE_USER']);
             $user->setCreatedAt($user->createdAt ?? new \DateTimeImmutable());
+            // $user->setVerified('true');
             
 
 

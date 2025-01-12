@@ -17,19 +17,9 @@ class TricksType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('userId', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
             ->add('groupname', EntityType::class, [
                 'class' => Group::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
         ;
     }
