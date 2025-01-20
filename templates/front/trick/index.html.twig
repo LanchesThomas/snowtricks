@@ -8,11 +8,27 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1 class="heading-1">Nos Tricks</h1>
-
-    {% for trick in tricks %}
-        {{trick.name}}
-    {% endfor %}
-</div>
+<section class="tricks-section">
+    <div class="container-standard no-pad">
+        <div class="grid-5">
+            {% for trick in tricks %}
+            <div class="trick-card">
+                <div class="trick-card-image" style="background-image: url('{{ asset(trick.media[0].url)}}')">
+                    
+                </div>
+                <div class="trick-card-info">
+                    <a href="{{ path('app_admin_trick_show', {id: trick.id}) }}" class="trick-link hover:underline">{{trick.name}}</a>
+                    <div class="trick-card-icon-wrapper">
+                        <a href="{{ path('app_admin_trick_edit', {id: trick.id}) }}"  class="trick-card-edit">modifier</a>
+                        <form method="post" action="{{ path('app_admin_trick_delete', {id: trick.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+                            <button class="trick-card-delete">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

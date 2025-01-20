@@ -43,7 +43,7 @@ class Trick
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'trick')]
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'trick', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $media;
 
     public function __construct()

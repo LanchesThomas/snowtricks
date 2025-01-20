@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajout de trick{% endblock %}
+{% set action = app.current_route == 'app_admin_trick_new' ? 'Ajout' : 'Édition' %}
+{% block title %}{{ action }} d'un trick{% endblock %}
 
 {% block body %}
     <style>
@@ -11,11 +12,14 @@
             padding-top: 32px;
         }
     </style>
+
+
+    
     
     <div class="container-standard">
     <div class="form-wrapper">
     
-        <h1 class="heading-1">Création d'un trick</h1>
+        <h1 class="heading-1">{{ action }} d'un trick</h1>
         
         {{ form_start(form) }}
             {{form_row(form.name, {
@@ -27,8 +31,32 @@
             {{form_row(form.groupname, {
                 label: 'Groupe du trick'
             })}}
+            <h3>Médias</h3>
+            <div id="media-collection" data-prototype="{{ form_widget(form.media.vars.prototype)|e('html_attr') }}">
+                {% for media in form.media %}
+                    <div class="media-item">
+                        {{ form_row(media.url, {'label': 'Fichier média'}) }}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-media-btn" class="btn btn-secondary">Ajouter un média</button>
+
         <button type="submit" class="btn btn-primary">Envoyer</button>
         {{ form_end(form) }}
     </div>
     </div>
+
+        <script>
+    document.getElementById('add-media-btn').addEventListener('click', function() {
+    const collectionHolder = document.getElementById('media-collection');
+    const prototype = collectionHolder.dataset.prototype;
+    const newIndex = collectionHolder.children.length;
+
+    const newForm = prototype.replace(/__name__/g, newIndex);
+    const newFormElement = document.createElement('div');
+    newFormElement.innerHTML = newForm;
+    collectionHolder.appendChild(newFormElement);
+});
+
+    </script>
 {% endblock %}

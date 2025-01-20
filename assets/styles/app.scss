@@ -1,9 +1,6 @@
 $white: #FDF7FA;
 $black: black;
-$purple: #60435F;
-$pink: #D67AB1;
-$lightPink: #E2A3C7;
-$blue: #A8DCD9;
+$blue: #083344;
 $montserrat: "Montserrat", sans-serif;
 $roboto :"Roboto", sans-serif;
 
@@ -11,17 +8,15 @@ p {
     margin: 0;
 }
 
-header {
-    position: fixed;
-    inset: 0% 0% auto;
-    border-bottom: 1px solid $purple;
-    background-color: $blue;
-}
-
 .heading-1 {
     font-family: $roboto;
     text-transform: uppercase;
-    font-size: 76px;
+    font-size: clamp(2.25rem, 1.917rem + 1.481vw, 3.25rem);
+    color: white;
+
+    &.black {
+        color: black
+    }
 }
 
 body {
@@ -63,17 +58,11 @@ body {
     }
 }
 
-footer {
-    padding-top: 32px;
-    padding-bottom: 32px;
-    background-color: $blue;
-    margin-top: 100px;
-}
-
 .hero-section {
     padding-top: 25svh;
     padding-bottom: 25svh;
-    border: 2px solid $blue;
+    border-radius: 0px 0px 8px 8px;
+    background-size: cover;
 }
 
 .hero-wrapper {
@@ -81,4 +70,98 @@ footer {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+.grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  
+.trick-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    border: 1px solid $blue;
+
+    .trick-card-image {
+        overflow: none;
+        height: 200px;
+        border-bottom: 0.5px solid $blue;
+        overflow: none;
+        background-size: cover;
+
+    }
+
+    .trick-card-info {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .trick-link {
+            padding: 4px;
+            text-transform: uppercase;   
+            font-weight: 600;
+        }
+
+        .trick-card-icon-wrapper {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+
+            a {
+                display: flex;
+                font-size: 12px;
+                justify-content: center;
+                align-items: center;
+                padding:4px;
+                border-radius: 4px
+            }
+
+            .trick-card-edit {
+                color: green;
+                border: 0.5px solid green;
+            }
+
+            .trick-card-delete {
+                color: red;
+                border: 0.5px solid red;
+            }
+        }
+    }
+}
+
+.main-text {
+    color: black;
+    &.white {
+        color: white
+    }
+}
+
+.trick-media-section {
+    margin-top: 80px;
+    margin-bottom: 80px;
+
+    .trick-media-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        
+        .trick-media-image {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px
+        }
+    }
+}
+
+.trick-desc-section {
+    margin-top: 80px;
+    margin-bottom: 80px;    
+}
+
+.tricks-section {
+    margin-top: 160px;
+    margin-bottom: 80px; 
 }

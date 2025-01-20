@@ -3,10 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Group;
+use App\Entity\Media;
 use App\Entity\Trick;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,6 +23,14 @@ class TricksType extends AbstractType
             ->add('groupname', EntityType::class, [
                 'class' => Group::class,
                 'choice_label' => 'name',
+            ])
+            ->add('media', CollectionType::class, [
+                'entry_type' => MediaType::class,
+                'allow_add' => true,  // Permet l'ajout dynamique
+                'allow_delete' => true,  // Permet la suppression dynamique
+                'by_reference' => false,
+                'prototype' => true, // Nécessaire pour ajouter des champs dynamiques via JavaScript
+                'label' => false,
             ])
         ;
     }

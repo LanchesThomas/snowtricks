@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{trick.name}}{% endblock %}
+
+{% block body %}
+<style>
+
+</style>
+
+<div class="container-standard no-pad">
+
+    <section class="hero-section" style="background-image: url('{{ asset(trick.media[0].url)}}')">
+        <div class="hero-wrapper">
+            <h1 class="heading-1 black">{{trick.name}}</h1>
+        </div>
+    </section>
+
+{% if trick.media|slice(1) %}
+    <section class="trick-media-section">
+        <div class="trick-media-wrapper">
+            {% for image in trick.media|slice(1) %}
+                <img src="{{image.url}}" class="trick-media-image">
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+
+    <section class="trick-desc-section">
+        <div class="trick-desc-wrapper">
+            <p class="main-text">{{trick.description}}</p>
+        </div>
+    </scetion>
+</div>
+
+{% endblock %}

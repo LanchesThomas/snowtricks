@@ -12,19 +12,33 @@
 </style>
 
 <div class="container-standard no-pad">
-<section class="hero-section">
+<section class="hero-section" style="background-image: url('{{ asset('images/fond.jpg')}}')">
     <div class="hero-wrapper">
-        <h1>Bienvenue sur Snowtricks</h1>
-        <p class="main-text">Le site référence de figure snowboard</p>
+        <h1 class="heading-1">Bienvenue sur Snowtricks</h1>
+        <p class="main-text white">Le site référence de figure snowboard</p>
     </div>
 </section>
 <section class="section">
-    <div class="grid-5">
-        {% for trick in tricks %}
-        <div class="trick-wrapper">
-            {{trick.name}}
+    <div class="container-standard no-pad">
+        <div class="grid-5">
+            {% for trick in tricks %}
+            <div class="trick-card">
+                <div class="trick-card-image" style="background-image: url('{{ asset(trick.media[0].url)}}')">
+                    
+                </div>
+                <div class="trick-card-info">
+                    <a href="{{ path('app_admin_trick_show', {id: trick.id}) }}" class="trick-link hover:underline">{{trick.name}}</a>
+                    <div class="trick-card-icon-wrapper">
+                        <a href="{{ path('app_admin_trick_edit', {id: trick.id}) }}"  class="trick-card-edit">modifier</a>
+                        <form method="post" action="{{ path('app_admin_trick_delete', {id: trick.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+                            <button class="trick-card-delete">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </section>
 </div>

@@ -23,11 +23,12 @@ class TrickController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/edit', name: 'app_admin_trick_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     #[Route('/new', name: 'app_admin_trick_new', methods: ['GET', 'POST'])]
     #[IsGranted('IS_AUTHENTICATED')]
-    public function new(Request $request,  EntityManagerInterface $entityManager): Response
+    public function new(?Trick $trick,Request $request,  EntityManagerInterface $entityManager): Response
     {
-        $trick = new Trick();
+        $trick ??= new Trick();
         $form = $this->createForm(TricksType::class, $trick);
         $form->handleRequest($request);
 
@@ -38,6 +39,26 @@ class TrickController extends AbstractController
             $trick->setCreatedAt($trick->createdAt ?? new \DateTimeImmutable());
             $trick->setUpdatedAt($trick->updateAt ?? new \DateTimeImmutable());
             $trick->setUserId($this->getUser());
+            foreach ($form->get('media') as $mediaForm) {
+                $file = $mediaForm->get('url')->getData(); // Récupérer le fichier depuis le champ non mappé
+                
+                if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+                    // Générer un nom de fichier unique
+                    $filename = uniqid().'.'.$file->guessExtension();
+            
+                    // Déplacer le fichier vers le répertoire configuré
+                    $destination = $this->getParameter('uploads_directory');
+                    $file->move($destination, $filename);
+            
+                    // Mettre à jour l'entité Media avec le chemin du fichier
+                    $media = $mediaForm->getData(); // Récupérer l'entité Media associée
+                    $media->setUrl('/uploads/'.$filename); // Chemin public relatif au répertoire web
+            
+                    // Associer le média au Trick
+                    $media->setTrick($trick);
+                    
+                }
+            }
 
             $entityManager->persist($trick);
             $entityManager->flush();
@@ -48,4 +69,27 @@ class TrickController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    #[Route('/{id}/delete', name: 'app_admin_trick_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED')]
+    public function delete(Trick $trick, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifier le jeton CSRF pour éviter les suppressions non autorisées
+        if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
+            // Supprimer l'entité Trick
+            $entityManager->remove($trick);
+            $entityManager->flush();
+
+            // Message de confirmation pour l'utilisateur
+            $this->addFlash('success', 'Trick supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Échec de la suppression. Jeton CSRF invalide.');
+        }
+
+        // Rediriger vers la liste ou une autre page
+        return $this->redirectToRoute('app_home');
+    }
+
+
+
 }
