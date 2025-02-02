@@ -7,29 +7,72 @@
 
 </style>
 
-<div class="container-standard no-pad">
-
     <section class="hero-section" style="background-image: url('{{ asset(trick.media[0].url)}}')">
-        <div class="hero-wrapper">
-            <h1 class="heading-1 black">{{trick.name}}</h1>
+        <div class="container-standard no-pad">
+            <div class="hero-wrapper">
+                <h1 class="heading-1 black">{{trick.name}}</h1>
+            </div>
         </div>
     </section>
 
 {% if trick.media|slice(1) %}
     <section class="trick-media-section">
-        <div class="trick-media-wrapper">
-            {% for image in trick.media|slice(1) %}
-                <img src="{{image.url}}" class="trick-media-image">
-            {% endfor %}
+        <div class="container-standard">
+            <div class="trick-media-wrapper">
+                {% for image in trick.media|slice(1) %}
+                    <img src="{{image.url}}" class="trick-media-image">
+                {% endfor %}
+            </div>
         </div>
     </section>
 {% endif %}
 
     <section class="trick-desc-section">
-        <div class="trick-desc-wrapper">
-            <p class="main-text">{{trick.description}}</p>
+        <div class="container-standard">
+            <div class="trick-desc-wrapper">
+                <p class="main-text">{{trick.description|nl2br}}</p>
+            </div>
         </div>
-    </scetion>
-</div>
+    </section>
+
+        <section class="comments-section">
+            <div class="container-standard">
+                <div class="flex-v gap-32">
+                    {% if trick.comments is not empty %}
+                    <div class="flex-v gap-16">
+                        <h2 class="heading-2">Commentaires</h2>
+
+                        <div class="comments-wrapper">
+                        {% for comment in trick.comments|reverse %}
+                            <div class="comment-wrapper">
+                                <p class="comment-author">{{ comment.userid.username }}</p>
+                                <p>{{ comment.content }}</p>
+                                <p class="self-end">{{ comment.createdat|date("d/m/Y") }}</p>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+
+
+                    {% if is_granted('ROLE_USER') %}
+                    <div class="flex-v gap-16">
+                        <h2 class="heading-2">Ajouter un commentaire</h2>
+                            {{ form_start(commentForm) }}
+                            {{ form_row(commentForm.content) }}
+                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                            {{ form_end(commentForm) }}
+                        {% else %}
+                            <div class="information">
+                                <p>Veuillez vous connecter pour laisser un commentaire.</p>
+                            </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
 
 {% endblock %}

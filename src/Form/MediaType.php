@@ -18,6 +18,8 @@ class MediaType extends AbstractType
             ->add('url', FileType::class, [
                 'label' => 'Télécharger un fichier',
                 'required' => true,
+                'data_class' => null,
+                'mapped' => false
             ]);
         
     }

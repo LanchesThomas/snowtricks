@@ -8,9 +8,14 @@
 
             <nav class="flex gap-4 text-white font-bold">
                 <a href="/">Accueil</a>
-                <a href="/tricks">Tricks</a>
+                {% if app.user %}
+                    <a href="/admin/trick/new">Tricks</a>
+                    <a href="/admin/trick/new">Déconnexion</a>
+                {% endif %}
+                {% if not app.user %}
                 <a href="/inscription">Inscription</a>
                 <a href="/connexion">Connexion</a>
+                {% endif %}
             </nav>
 
     </div>

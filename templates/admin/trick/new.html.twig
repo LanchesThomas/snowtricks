@@ -11,52 +11,81 @@
             gap: 56px;
             padding-top: 32px;
         }
-    </style>
 
+        {% if action is same as "Ajout" %}
+            .trick-add-section {
+                height: 75svh
+            }
+        {% endif %}
 
-    
-    
-    <div class="container-standard">
-    <div class="form-wrapper">
-    
-        <h1 class="heading-1">{{ action }} d'un trick</h1>
         
-        {{ form_start(form) }}
-            {{form_row(form.name, {
-                label: 'Nom du trick'
-            })}}
-            {{form_row(form.description, {
-                label: 'Description du trick'
-            })}}
-            {{form_row(form.groupname, {
-                label: 'Groupe du trick'
-            })}}
-            <h3>Médias</h3>
-            <div id="media-collection" data-prototype="{{ form_widget(form.media.vars.prototype)|e('html_attr') }}">
-                {% for media in form.media %}
-                    <div class="media-item">
-                        {{ form_row(media.url, {'label': 'Fichier média'}) }}
-                    </div>
-                {% endfor %}
+    </style>
+    <section class="trick-add-section">
+        <div class="container-standard">
+            <div class="form-wrapper">
+            
+                <h1 class="heading-1 black">{{ action }} d'un trick</h1>
+                
+                {{ form_start(form) }}
+                    {{form_row(form.name, {
+                        label: 'Nom du trick'
+                    })}}
+                    {{form_row(form.description, {
+                        label: 'Description du trick'
+                    })}}
+                    {{form_row(form.groupname, {
+                        label: 'Groupe du trick'
+                    })}}
+                    
+                        <div id="media-collection" data-prototype="{{ form_widget(form.media.vars.prototype)|e('html_attr') }}">
+                            {% for media in form.media %}
+                                <div class="media-item">
+                                    {{ form_row(media.url, {'label': 'Fichier média'}) }}
+                                </div>
+                            {% endfor %}
+                        </div> 
+                
+                <button type="button" id="add-media-btn" class="btn btn-secondary">Ajouter un média</button>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+                {{ form_end(form) }}
             </div>
-            <button type="button" id="add-media-btn" class="btn btn-secondary">Ajouter un média</button>
+        </div>
+    </section>
+    
+    {% if action is same as "Édition" %}
+    <section class="trick-media-section">
+        <div class="container-standard">
+            <div class="trick-media-wrapper">
+                {% for image in trick.media %}
+                <div class="relative">
+                    <img src="{{ image.url }}" class="trick-media-image">
+                    <form method="post" action="{{ path('app_trick_media_delete', { id: trick.id, mediaId: image.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ image.id) }}">
+                        <button type="submit" class="absolute bottom-1 right-1 p-1 bg-red-500 rounded-md text-sm text-white">
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+        </div>
+    </section>
+    {% endif %}
 
-        <button type="submit" class="btn btn-primary">Envoyer</button>
-        {{ form_end(form) }}
-    </div>
-    </div>
+    <script>
+       document.getElementById('add-media-btn').addEventListener('click', function() {
+        const collectionHolder = document.getElementById('media-collection');
+        const prototype = collectionHolder.dataset.prototype;
+        const newIndex = collectionHolder.children.length;
 
-        <script>
-    document.getElementById('add-media-btn').addEventListener('click', function() {
-    const collectionHolder = document.getElementById('media-collection');
-    const prototype = collectionHolder.dataset.prototype;
-    const newIndex = collectionHolder.children.length;
+        // Remplacez __name__ dans le prototype par l'index du nouveau champ
+        const newForm = prototype.replace(/__name__/g, newIndex);
+        const newFormElement = document.createElement('div');
+        newFormElement.classList.add('media-item'); // Ajout d'une classe pour styliser si besoin
+        newFormElement.innerHTML = newForm;
 
-    const newForm = prototype.replace(/__name__/g, newIndex);
-    const newFormElement = document.createElement('div');
-    newFormElement.innerHTML = newForm;
-    collectionHolder.appendChild(newFormElement);
-});
+        collectionHolder.appendChild(newFormElement);
+    });
 
     </script>
+
 {% endblock %}

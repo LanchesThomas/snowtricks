@@ -13,10 +13,18 @@ p {
     text-transform: uppercase;
     font-size: clamp(2.25rem, 1.917rem + 1.481vw, 3.25rem);
     color: white;
+    text-align: center;
 
     &.black {
         color: black
     }
+}
+
+.heading-2 {
+    font-family: $roboto;
+    text-transform: uppercase;
+    font-size: clamp(1.5rem, 1.917rem + 1.481vw, 2rem);
+    color: black;
 }
 
 body {
@@ -32,12 +40,12 @@ body {
     padding-right: 70px;
     padding-left: 70px;
     max-width: 1440px;
+    &.no-pad {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
-.no-pad {
-    padding-left: 0;
-    padding-right: 0;
-}
 
 .navbar-wrapper {
     display: flex;
@@ -74,8 +82,18 @@ body {
 
 .grid-5 {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
+
+    @media (max-width: 992px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 767px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 600px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
   }
   
 .trick-card {
@@ -83,14 +101,14 @@ body {
     flex-direction: column;
     border-radius: 8px;
     border: 1px solid $blue;
+    overflow: none;
 
     .trick-card-image {
-        overflow: none;
+        border-radius: 8px;
         height: 200px;
         border-bottom: 0.5px solid $blue;
         overflow: none;
         background-size: cover;
-
     }
 
     .trick-card-info {
@@ -156,7 +174,7 @@ body {
     }
 }
 
-.trick-desc-section {
+.trick-desc-section, .comments-section {
     margin-top: 80px;
     margin-bottom: 80px;    
 }
@@ -164,4 +182,40 @@ body {
 .tricks-section {
     margin-top: 160px;
     margin-bottom: 80px; 
+}
+
+.comments-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    .comment-wrapper {
+        padding: 16px 32px;
+        background-color: #08334417;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .comment-author {
+        font-size: 24px;
+        font-weight: 600;
+    }
+}
+
+.flex-v {
+    display: flex;
+    flex-direction: column;
+    &.gap-32 {
+        gap: 32px;
+    }
+    &.gap-16 {
+        gap: 16px;
+    }
+}
+
+.trick-add-section {
+    margin-top: 80px;
+    margin-bottom: 80px;
 }

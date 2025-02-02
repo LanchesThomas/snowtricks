@@ -40,4 +40,5 @@ class TrickRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
 }
