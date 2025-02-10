@@ -10,7 +10,7 @@
                 <a href="/">Accueil</a>
                 {% if app.user %}
                     <a href="/admin/trick/new">Tricks</a>
-                    <a href="/admin/trick/new">Déconnexion</a>
+                    <a href="{{ path('app_logout') }}">Déconnexion</a>
                 {% endif %}
                 {% if not app.user %}
                 <a href="/inscription">Inscription</a>
@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', function () {
 <!-- MENU MOBILE -->
 <div class=" fixed top-0 w-full z-10 sm:hidden block">
     <div class="flex items-center justify-between  container mx-auto p-4 bg-cyan-950">
-        <a href="?action=home" class="text-white text-xl uppercase" style="font-family: 'Tiny5', sans-serif;">
-            infoblog
+        <a href="/" class="text-white text-xl uppercase" style="font-family: 'Tiny5', sans-serif;">
+            snowtricks
         </a>
 
         <div class="" id="navbar-open">

@@ -14,7 +14,7 @@
 
         {% if action is same as "Ajout" %}
             .trick-add-section {
-                height: 75svh
+                
             }
         {% endif %}
 
@@ -31,7 +31,7 @@
                         label: 'Nom du trick'
                     })}}
                     {{form_row(form.description, {
-                        label: 'Description du trick'
+                        label: 'Description du trick',
                     })}}
                     {{form_row(form.groupname, {
                         label: 'Groupe du trick'
@@ -55,16 +55,17 @@
     {% if action is same as "Édition" %}
     <section class="trick-media-section">
         <div class="container-standard">
-            <div class="trick-media-wrapper">
+            <div class="grid-5">
                 {% for image in trick.media %}
-                <div class="relative">
-                    <img src="{{ image.url }}" class="trick-media-image">
-                    <form method="post" action="{{ path('app_trick_media_delete', { id: trick.id, mediaId: image.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');">
+                <div class="trick-card relative h-[300px]">
+                    <img src="{{ image.url }}" class="trick-media-image object-cover h-full">
+                    <form method="post" action="{{ path('app_trick_media_delete', { id: trick.id, mediaId: image.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');" class="z-10">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ image.id) }}">
-                        <button type="submit" class="absolute bottom-1 right-1 p-1 bg-red-500 rounded-md text-sm text-white">
-                            Supprimer
+                        <button type="submit" class="absolute bottom-1 right-1 p-1 bg-red-500 rounded-md w-8 h-8">
+                            {{ ux_icon('guidance:bin') }}
                         </button>
                     </form>
+                    <div class="linear-g-absolute"></div>
                 </div>
                 {% endfor %}
         </div>

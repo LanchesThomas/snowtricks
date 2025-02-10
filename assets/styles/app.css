@@ -1,18 +1,23 @@
-
 p {
   margin: 0;
 }
 
-header {
-  position: fixed;
-  inset: 0% 0% auto;
-  border-bottom: 1px solid #60435F;
-  background-color: #A8DCD9;
-}
-
-h1 {
+.heading-1 {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
+  font-size: clamp(2.25rem, 1.917rem + 1.481vw, 3.25rem);
+  color: white;
+  text-align: center;
+}
+.heading-1.black {
+  color: black;
+}
+
+.heading-2 {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 1.917rem + 1.481vw, 2rem);
+  color: black;
 }
 
 body {
@@ -29,8 +34,7 @@ body {
   padding-left: 70px;
   max-width: 1440px;
 }
-
-.no-pad {
+.container-standard.no-pad {
   padding-left: 0;
   padding-right: 0;
 }
@@ -54,20 +58,12 @@ body {
   padding: 5px;
 }
 
-body {
-  margin-top: 76px;
-}
-
-.section {
-  margin-top: clamp(2.5rem, 1.667rem + 3.704vw, 5rem);
-  margin-bottom: clamp(2.5rem, 1.667rem + 3.704vw, 5rem);
-}
-
 .hero-section {
   padding-top: 25svh;
   padding-bottom: 25svh;
-  border: 2px solid #A8DCD9;
+  border-radius: 0px 0px 8px 8px;
   background-size: cover;
+  position: relative;
 }
 
 .hero-wrapper {
@@ -75,5 +71,153 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}/*# sourceMappingURL=app.css.map */
+}
 
+.grid-5 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 992px) {
+  .grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .grid-5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .grid-5 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.trick-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  border: 1px solid #083344;
+  overflow: hidden;
+  position: relative;
+}
+.trick-card .trick-card-image {
+  border-radius: 8px;
+  height: 200px;
+  border-bottom: 0.5px solid #083344;
+  overflow: none;
+  background-size: cover;
+  position: relative;
+}
+.trick-card .trick-card-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.trick-card .trick-card-info .trick-link {
+  padding: 4px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.trick-card .trick-card-info .trick-card-icon-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+.trick-card .trick-card-info .trick-card-icon-wrapper a {
+  display: flex;
+  font-size: 12px;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+.trick-card .trick-card-info .trick-card-icon-wrapper .trick-card-edit {
+  color: green;
+  border: 0.5px solid green;
+}
+.trick-card .trick-card-info .trick-card-icon-wrapper .trick-card-delete {
+  color: red;
+  border: 0.5px solid red;
+}
+
+.main-text {
+  color: black;
+}
+.main-text.white {
+  color: white;
+}
+
+.trick-media-section {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+.trick-media-section .trick-media-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
+.trick-media-section .trick-media-wrapper .trick-media-image {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 8px;
+}
+
+.linear-g-absolute {
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4509803922));
+  position: absolute;
+  inset: 0%;
+}
+
+.trick-desc-section, .comments-section {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+.tricks-section {
+  margin-top: 160px;
+  margin-bottom: 80px;
+}
+
+.comments-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.comments-wrapper .comment-wrapper {
+  padding: 16px 32px;
+  background-color: rgba(8, 51, 68, 0.0901960784);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.comments-wrapper .comment-author {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.flex-v {
+  display: flex;
+  flex-direction: column;
+}
+.flex-v.gap-32 {
+  gap: 32px;
+}
+.flex-v.gap-16 {
+  gap: 16px;
+}
+
+.trick-add-section {
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+#tricks_description {
+  height: 300px;
+  overflow: auto;
+}/*# sourceMappingURL=app.css.map */

@@ -31,17 +31,24 @@ class TrickController extends AbstractController
         $commentForm->handleRequest($request);
 
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-            $comment->setCreatedAt(new \DateTimeImmutable());
-            $comment->setTrick($trick);
-            $comment->setStatus(true);
-            $comment->setUserId($this->getUser());
-            $comment->setContent($commentForm->get('content')->getData());
-
-            $entityManager->persist($comment);
-            $entityManager->flush();
-
+            try {
+                $comment->setCreatedAt(new \DateTimeImmutable());
+                $comment->setTrick($trick);
+                $comment->setStatus(true);
+                $comment->setUserId($this->getUser());
+                $comment->setContent($commentForm->get('content')->getData());
+        
+                $entityManager->persist($comment);
+                $entityManager->flush();
+        
+                $this->addFlash('success', 'Commentaire envoyé avec succès !');
+            } catch (\Exception $e) {
+                $this->addFlash('danger', 'Une erreur est survenue lors de l\'envoi du commentaire.');
+            }
+        
             return $this->redirectToRoute('app_admin_trick_show', ['id' => $id]);
         }
+        
 
         return $this->render('admin/trick/show.html.twig', [
             'trick' => $trick, 'commentForm' => $commentForm->createView()

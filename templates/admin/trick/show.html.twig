@@ -1,28 +1,143 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{trick.name}}{% endblock %}
+{% block head %}
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+{% endblock %}
 
 {% block body %}
-<style>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var swiper = new Swiper(".swiper-trick", {
+            slidesPerView: 1,
+            spaceBetween: 16,
+            loop: true,
+            watchOverflow: true,
+            navigation: {
+                nextEl: ".swiper-next",
+                prevEl: ".swiper-prev",
+            },
+            breakpoints: {
+                767: {
+                    slidesPerView: 2,
+                },
+                992: {
+                    slidesPerView: 3,
+                }
+            }
+        });
+    });
 
-    <section class="hero-section" style="background-image: url('{{ asset(trick.media[0].url)}}')">
+document.addEventListener("DOMContentLoaded", function() {
+    loadMoreComments();
+});
+
+
+function loadMoreComments() {
+    let everyComments = document.querySelectorAll('.comment-wrapper[data-page]');
+
+    if (!everyComments.length) return false;
+    console.log('load');
+
+    let totalPages = parseInt(document.querySelector('#comments-pagination').getAttribute('data-total-pages'));
+    let nextPageButton = document.querySelector('#load-next-comments');
+    let previousPageButton = document.querySelector('#load-previous-comments');
+    let currentPage = parseInt(document.querySelector('#comments-pagination').getAttribute('data-current-page'));
+    let currentPageNumber = document.querySelector('#current-page-number');
+
+    nextPageButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log('nextr');
+        currentPage++;
+        currentPageNumber.textContent = String(currentPage);
+        updatePage();
+    })
+
+    previousPageButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log('nextr');
+        currentPage--;
+        currentPageNumber.textContent = String(currentPage);
+        updatePage();
+    })
+
+    function updatePage() {
+        everyComments.forEach(function (comment) {
+            if (parseInt(comment.getAttribute('data-page')) !== currentPage) {
+                comment.classList.add('hide');
+            } else {
+                comment.classList.remove('hide');
+            }
+        })
+
+        if (currentPage >= totalPages) {
+            nextPageButton.classList.add('hide');
+        } else {
+            nextPageButton.classList.remove('hide');
+        }
+
+        if (currentPage > 1) {
+            previousPageButton.classList.remove('hide');
+        } else {
+            previousPageButton.classList.add('hide');
+        }
+
+        document.querySelector('#comments-pagination').setAttribute('data-current-page', String(currentPage));
+    }
+}
+</script>
+
+    <section class="hero-section" style="background-image: url('{{ trick.media[0] is defined ? asset(trick.media[0].url) : asset('images/fond.jpg') }}')">
+
+
         <div class="container-standard no-pad">
             <div class="hero-wrapper">
-                <h1 class="heading-1 black">{{trick.name}}</h1>
+                <p class="p-2 bg-white rounded-md z-1 uppercase font-extrabold">{{trick.groupname.name}}</p>
+                <h1 class="heading-1 z-1">{{trick.name}}</h1>
             </div>
         </div>
+        {% if app.user %}
+        <div class="flex gap-2 absolute top-4 right-4">
+            <a href="{{ path('app_admin_trick_edit', {id: trick.id}) }}"  class="w-10 h-10 block bg-green-700 p-2 border border-white rounded-full text-white">{{ ux_icon('solar:pen-outline') }}</a>
+            <form method="post" action="{{ path('app_admin_trick_delete', {id: trick.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+                <button class="w-10 h-10 block bg-red-700 p-2 border border-white rounded-full text-white">{{ ux_icon('guidance:bin') }}</button>
+            </form>
+        </div>
+        {% endif %}
+        <div class="linear-g-absolute"></div>
     </section>
+
+    {% for type, messages in app.flashes %}
+        <div class="container-standard py-10">
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>  
+    {% endfor %}
 
 {% if trick.media|slice(1) %}
     <section class="trick-media-section">
-        <div class="container-standard">
-            <div class="trick-media-wrapper">
-                {% for image in trick.media|slice(1) %}
-                    <img src="{{image.url}}" class="trick-media-image">
-                {% endfor %}
+        <div class="container-standard relative">
+            <div class="grid-5 swiper swiper-trick">
+                <div class="swiper-wrapper ">
+                    {% for image in trick.media|slice(1) %}
+                    <div class="trick-card relative h-[300px] swiper-slide">
+                        <img src="{{image.url}}" class="object-cover h-full">
+                        <div class="linear-g-absolute"></div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
+            <div class="swiper-next">{{ ux_icon('material-symbols-light:chevron-right') }}</div>
+            <div class="swiper-prev">{{ ux_icon('material-symbols-light:chevron-left') }}</div>
         </div>
     </section>
 {% endif %}
@@ -35,44 +150,66 @@
         </div>
     </section>
 
-        <section class="comments-section">
-            <div class="container-standard">
-                <div class="flex-v gap-32">
-                    {% if trick.comments is not empty %}
-                    <div class="flex-v gap-16">
-                        <h2 class="heading-2">Commentaires</h2>
+    {% set page = 1 %}
+    {% set commentsPerPage = 3 %}
+    {% set totalPages = (trick.comments|length/commentsPerPage)|round(0, 'ceil') %}
 
-                        <div class="comments-wrapper">
-                        {% for comment in trick.comments|reverse %}
-                            <div class="comment-wrapper">
-                                <p class="comment-author">{{ comment.userid.username }}</p>
-                                <p>{{ comment.content }}</p>
-                                <p class="self-end">{{ comment.createdat|date("d/m/Y") }}</p>
-                            </div>
-                        {% endfor %}
+    <section class="comments-section">
+        <div class="container-standard">
+            <div class="flex-v gap-32">
+                {% if trick.comments is not empty %}
+                <div class="flex-v gap-16">
+                    <h2 class="heading-2">Commentaires</h2>
+
+                {% if trick.comments|length > commentsPerPage %}
+                    <div class="actions comments-pagination flex justify-between items-center" id="comments-pagination" data-total-pages="{{ totalPages }}" data-current-page="1">
+                        <p class="pagination-number text-xl font-extrabold"><span id="current-page-number">1</span><span>/{{ totalPages }}</span></p>
+                        <div class="flex gap-2">
+                            <a class="hide p-2 bg-[#08334417] rounded-md" id="load-previous-comments" href="#">
+                                Précédent
+                            </a>
+                            <a class="p-2 bg-[#08334417] rounded-md" id="load-next-comments" href="#">
+                                Suivant
+                            </a>
                         </div>
                     </div>
-                    {% endif %}
+                {% endif %}
 
+                    <div class="comments-wrapper">
+                    {% for comment in (trick.comments|default([]))|reverse %}
+                        <div class="comment-wrapper {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
+                            <p class="comment-author">{{ comment.userid.username }}</p>
+                            <p>{{ comment.content }}</p>
+                            <p class="self-end">{{ comment.createdat|date("d/m/Y") }}</p>
+                        </div>
 
-
-
-                    {% if is_granted('ROLE_USER') %}
-                    <div class="flex-v gap-16">
-                        <h2 class="heading-2">Ajouter un commentaire</h2>
-                            {{ form_start(commentForm) }}
-                            {{ form_row(commentForm.content) }}
-                            <button type="submit" class="btn btn-primary">Envoyer</button>
-                            {{ form_end(commentForm) }}
-                        {% else %}
-                            <div class="information">
-                                <p>Veuillez vous connecter pour laisser un commentaire.</p>
-                            </div>
+                         {% if loop.index is divisible by(commentsPerPage) %}
+                            {% set page = page + 1 %}
+                        {% endif %}
+                    {% endfor %}
                     </div>
-                    {% endif %}
                 </div>
+                {% endif %}
+
+
+
+
+                {% if is_granted('ROLE_USER') %}
+                <div class="flex-v gap-16">
+                    <h2 class="heading-2">Ajouter un commentaire</h2>
+                        {{ form_start(commentForm) }}
+                        {{ form_row(commentForm.content) }}
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                        {{ form_end(commentForm) }}
+                    {% else %}
+                        <div class="p-4 bg-[#08334405] rounded-sm self-center">
+                            <p>Veuillez vous <a class="underline font-bold" href="/">connecter</a> pour laisser un commentaire.</p>
+                        </div>
+                </div>
+                {% endif %}
             </div>
-        </section>
+        </div>
+    </section>
 
 
 {% endblock %}

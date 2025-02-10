@@ -12,7 +12,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(TrickRepository $tricksRepository): Response
     {
-        $tricks = $tricksRepository->findAll();
+        $tricks = $tricksRepository->findBy([], ['createdAt' => 'DESC']); // Tri du plus récent au plus ancien
         return $this->render('home/index.html.twig', [
             'tricks' => $tricks,
         ]);

@@ -7,37 +7,106 @@
 
 
 {% block body %}
-<style>
+<script>
+loadMoreTricks();
 
-</style>
+function loadMoreTricks() {
+    let everyTricks = document.querySelectorAll("[data-page]");
+    let totalPages = parseInt(document.querySelector('#load-more-tricks').getAttribute('data-total-pages'));
+    let loadMoreButton = document.querySelector('#load-more-tricks');
+    let nextPage = parseInt(document.querySelector('#load-more-tricks').getAttribute('data-next-page'));
+    let nextTricks = document.querySelectorAll("[data-page='" + nextPage + "']");
+
+    if (!everyTricks.length) return false;
+
+    loadMoreButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        nextTricks.forEach(function(trick) {
+            trick.classList.remove('hide');
+        })
+
+        if (nextPage >= totalPages) {
+            loadMoreButton.remove();
+        }
+
+        nextPage++;
+        nextTricks = document.querySelectorAll("[data-page='" + nextPage + "']");
+        loadMoreButton.setAttribute("data-next-page", String(nextPage));
+    })
+}
+</script>
 
 <section class="hero-section" style="background-image: url('{{ asset('images/fond.jpg')}}')">
     <div class="container-standard no-pad">
         <div class="hero-wrapper">
-            <h1 class="heading-1">Bienvenue sur Snowtricks</h1>
-            <p class="main-text white">Le site référence de figure snowboard</p>
+            <h1 class="heading-1 z-1">Bienvenue sur Snowtricks</h1>
+            <p class="main-text white z-1">Le site référence de figure snowboard</p>
         </div>
     </div>
+    <div class="linear-g-absolute"></div>
 </section>
+
+    {% for type, messages in app.flashes %}
+        <div class="container-standard py-10">
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>  
+    {% endfor %}
+
+
 <section class="section">
     <div class="container-standard">
-        <div class="grid-5">
-            {% for trick in tricks %}
-            <div class="trick-card">
-                <div class="trick-card-image" style="background-image: url('{{ asset(trick.media[0].url)}}')">
-                </div>
-                <div class="trick-card-info">
-                    <a href="{{ path('app_admin_trick_show', {id: trick.id}) }}" class="trick-link hover:underline">{{trick.name}}</a>
-                    <div class="trick-card-icon-wrapper">
-                        <a href="{{ path('app_admin_trick_edit', {id: trick.id}) }}"  class="trick-card-edit">modifier</a>
-                        <form method="post" action="{{ path('app_admin_trick_delete', {id: trick.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
-                            <button class="trick-card-delete">Supprimer</button>
-                        </form>
-                    </div>
-                </div>
+        <div class="flex flex-col gap-32">
+            {% if tricks is not empty %}
+            <div class="grid-5">
+            {% set page = 1 %}
+            {% set tricksPerPage = 8 %}
+            {% set totalPages = (tricks|length/tricksPerPage)|round(0, 'ceil') %}
+
+                {% for trick in tricks %}
+                    {% if app.user %}
+                        <div class="trick-card {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
+                            <div class="trick-card-image" style="background-image: url('{{ trick.media[0] is defined ? asset(trick.media[0].url) : asset('images/fond.jpg') }}')">
+                            <div class="linear-g-absolute"></div>
+                            </div>
+                            <div class="trick-card-info">
+                                <a href="{{ path('app_admin_trick_show', {id: trick.id}) }}" class="trick-link hover:underline">{{trick.name}}</a>
+                                
+                                <div class="trick-card-icon-wrapper">
+                                    <a href="{{ path('app_admin_trick_edit', {id: trick.id}) }}"  class="trick-card-edit">{{ ux_icon('solar:pen-outline') }}</a>
+                                    <form method="post" action="{{ path('app_admin_trick_delete', {id: trick.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+                                        <button class="trick-card-delete">{{ ux_icon('guidance:bin') }}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if not app.user %}
+                        <a href="{{ path('app_admin_trick_show', {id: trick.id}) }}" class="trick-card {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
+                            <div class="trick-card-image" style="background-image: url('{{ asset(trick.media[0].url)}}')">
+                            <div class="linear-g-absolute"></div>
+                            </div>
+                            <div class="trick-card-info">
+                                <p class="trick-link hover:underline">{{trick.name}}</p>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% if loop.index is divisible by(tricksPerPage) %}
+                        {% set page = page + 1 %}
+                    {% endif %}
+                {% endfor %}
             </div>
-            {% endfor %}
+            <a class="px-4 py-2 bg-[#083344] rounded-sm self-center text-white" id="load-more-tricks" href="#" data-next-page="2" data-total-pages="{{ totalPages }}" >
+                Voir plus
+            </a>
+            {% else %}
+                <p class="p-4 bg-[#08334405] rounded-sm w-full text-center">Il n'y a aucun tricks à afficher</p>
+            {% endif %}
         </div>
     </div>
 </section>
