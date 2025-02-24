@@ -70,6 +70,7 @@ body {
     padding-bottom: 25svh;
     border-radius: 0px 0px 8px 8px;
     background-size: cover;
+    background-position: center;
     position: relative;
 }
 
@@ -239,6 +240,10 @@ body {
 #tricks_description {
     height: 300px;
     overflow: auto;
+}
+
+.swiper-slide {
+    height: auto !important;
 }
 
 .swiper-next {

@@ -92,7 +92,17 @@ function loadMoreComments() {
 }
 </script>
 
-    <section class="hero-section" style="background-image: url('{{ trick.media[0] is defined ? asset(trick.media[0].url) : asset('images/fond.jpg') }}')">
+    {% set firstImageUrl = 'images/fond.jpg' %}  {# Valeur par défaut si aucune image n'est trouvée #}
+    {% set foundImage = false %}  {# Variable pour savoir si une image a été trouvée #}
+
+    {% for media in trick.media %}
+        {% if not media.isVideo and not foundImage %}
+            {% set firstImageUrl = asset(media.url) %}
+            {% set foundImage = true %}
+        {% endif %}
+    {% endfor %}
+
+    <section class="hero-section" style="background-image: url('{{ firstImageUrl }}')">
 
 
         <div class="container-standard no-pad">
@@ -123,16 +133,30 @@ function loadMoreComments() {
         </div>  
     {% endfor %}
 
-{% if trick.media|slice(1) %}
+
+{% if trick.media %}
     <section class="trick-media-section">
         <div class="container-standard relative">
             <div class="grid-5 swiper swiper-trick">
-                <div class="swiper-wrapper ">
-                    {% for image in trick.media|slice(1) %}
-                    <div class="trick-card relative h-[300px] swiper-slide">
-                        <img src="{{image.url}}" class="object-cover h-full">
-                        <div class="linear-g-absolute"></div>
-                    </div>
+                <div class="swiper-wrapper">
+                    {% for media in trick.media %}
+                        <div class="trick-card relative h-[300px] swiper-slide object-cover"> 
+                            {% if media.isVideo %}
+                                <iframe 
+                                    width="100%" height="100%" 
+                                    src="https://www.youtube.com/embed/{{ media.videoUrl | slice(17) }}" 
+                                    title="Vidéo du trick" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    referrerpolicy="strict-origin-when-cross-origin" 
+                                    allowfullscreen>
+                                </iframe>
+                            {% else %}
+                                <img src="{{ media.url }}" class="object-cover h-full">
+                                
+                            {% endif %}
+                            <div class="linear-g-absolute"></div>
+                        </div>
                     {% endfor %}
                 </div>
             </div>

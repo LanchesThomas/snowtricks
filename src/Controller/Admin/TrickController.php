@@ -51,27 +51,44 @@ class TrickController extends AbstractController
                 $slug = $slugger->slug($trick->getName())->lower();
                 $trick->setSlug($slug);
     
-                // Gérer l'upload des médias
                 $mediaForms = $form->get('media'); // Récupère la collection des médias
                 foreach ($mediaForms as $mediaForm) {
-                    $file = $mediaForm->get('url')->getData();
+                    $file = $mediaForm->get('url')->getData(); // Récupère l'image
+                    $videoUrl = $mediaForm->get('videoUrl')->getData(); // Récupère l'URL de la vidéo
+
                     if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
-                        // Générer un nom unique pour le fichier
+                        // Générer un nom unique pour l'image
                         $filename = uniqid().'.'.$file->guessExtension();
                         $destination = $this->getParameter('uploads_directory');
                         $file->move($destination, $filename);
-    
-                        // Créer et associer un nouvel objet Media
+
+                        // Créer et associer un nouvel objet Media pour l'image
                         $media = new Media();
                         $media->setUrl('/uploads/'.$filename);
+                        $media->setIsVideo(false); // Marque cet objet comme une image
                         $media->setTrick($trick);
-    
+                        
+                        // Persist l'image
+                        $entityManager->persist($media);
+                    }
+
+                    // Vérification si une vidéo est envoyée
+                    if (!empty($videoUrl)) {
+                        // Créer et associer un nouvel objet Media pour la vidéo
+                        $media = new Media();
+                        $media->setVideoUrl($videoUrl);
+                        $media->setIsVideo(true); // Marque cet objet comme une vidéo
+                        $media->setTrick($trick);
+
+                        // Persist la vidéo
                         $entityManager->persist($media);
                     }
                 }
-    
+
+                // Sauvegarde tous les médias et le trick
                 $entityManager->persist($trick);
                 $entityManager->flush();
+
     
                 // Définir un message flash en fonction de l'action
                 $message = $isNew ? 'Le trick a été ajouté avec succès !' : 'Le trick a été mis à jour avec succès !';

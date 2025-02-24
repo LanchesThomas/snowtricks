@@ -70,7 +70,17 @@ function loadMoreTricks() {
                 {% for trick in tricks %}
                     {% if app.user %}
                         <div class="trick-card {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
-                            <div class="trick-card-image" style="background-image: url('{{ trick.media[0] is defined ? asset(trick.media[0].url) : asset('images/fond.jpg') }}')">
+                            {% set firstImageUrl = 'images/fond.jpg' %}  {# Valeur par défaut si aucune image n'est trouvée #}
+                            {% set foundImage = false %}  {# Variable pour savoir si une image a été trouvée #}
+
+                            {% for media in trick.media %}
+                                {% if not media.isVideo and not foundImage %}
+                                    {% set firstImageUrl = asset(media.url) %}
+                                    {% set foundImage = true %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <div class="trick-card-image" style="background-image: url('{{ firstImageUrl }}')">
                             <div class="linear-g-absolute"></div>
                             </div>
                             <div class="trick-card-info">
@@ -88,8 +98,19 @@ function loadMoreTricks() {
                     {% endif %}
                     {% if not app.user %}
                         <a href="{{ path('app_admin_trick_show', {slug: trick.slug}) }}" class="trick-card {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
-                            <div class="trick-card-image" style="background-image: url('{{ trick.media[0] is defined ? asset(trick.media[0].url) : asset('images/fond.jpg') }}')">
-                            <div class="linear-g-absolute"></div>
+
+                            {% set firstImageUrl = 'images/fond.jpg' %}  {# Valeur par défaut si aucune image n'est trouvée #}
+                            {% set foundImage = false %}  {# Variable pour savoir si une image a été trouvée #}
+
+                            {% for media in trick.media %}
+                                {% if not media.isVideo and not foundImage %}
+                                    {% set firstImageUrl = asset(media.url) %}
+                                    {% set foundImage = true %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <div class="trick-card-image" style="background-image: url('{{ firstImageUrl }}')">
+                                <div class="linear-g-absolute"></div>
                             </div>
                             <div class="trick-card-info">
                                 <p class="trick-link hover:underline">{{trick.name}}</p>

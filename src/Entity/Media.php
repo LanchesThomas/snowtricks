@@ -13,8 +13,11 @@ class Media
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(length: 500, nullable: true)]
     private ?string $url = null;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $videoUrl = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isVideo = false;
@@ -37,6 +40,18 @@ class Media
     public function setUrl(?string $url): static
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getVideoUrl(): ?string
+    {
+        return $this->videoUrl;
+    }
+
+    public function setVideoUrl(?string $videoUrl): static
+    {
+        $this->videoUrl = $videoUrl;
 
         return $this;
     }
