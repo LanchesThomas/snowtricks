@@ -40,6 +40,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $role = [];
 
+    #[ORM\Column(length: 255, options: ["default" => "images/default_profile.png"])]
+    private ?string $profilePicture = "images/default_profile.png";
+
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -92,6 +96,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(string $profilePicture): static
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
 
     public function setUsername(string $username): static
     {

@@ -11,8 +11,8 @@
 {% block body %}
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
+<script type="module" >
+
         var swiper = new Swiper(".swiper-trick", {
             slidesPerView: 1,
             spaceBetween: 16,
@@ -31,11 +31,11 @@
                 }
             }
         });
-    });
 
-document.addEventListener("DOMContentLoaded", function() {
+
+
     loadMoreComments();
-});
+
 
 
 function loadMoreComments() {
@@ -103,8 +103,8 @@ function loadMoreComments() {
         </div>
         {% if app.user %}
         <div class="flex gap-2 absolute top-4 right-4">
-            <a href="{{ path('app_admin_trick_edit', {id: trick.id}) }}"  class="w-10 h-10 block bg-green-700 p-2 border border-white rounded-full text-white">{{ ux_icon('solar:pen-outline') }}</a>
-            <form method="post" action="{{ path('app_admin_trick_delete', {id: trick.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
+            <a href="{{ path('app_admin_trick_edit', {slug: trick.slug}) }}" class="w-10 h-10 block bg-green-700 p-2 border border-white rounded-full text-white">{{ ux_icon('solar:pen-outline') }}</a>
+            <form method="post" action="{{ path('app_admin_trick_delete', {slug: trick.slug}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
                 <button class="w-10 h-10 block bg-red-700 p-2 border border-white rounded-full text-white">{{ ux_icon('guidance:bin') }}</button>
             </form>
@@ -178,7 +178,10 @@ function loadMoreComments() {
                     <div class="comments-wrapper">
                     {% for comment in (trick.comments|default([]))|reverse %}
                         <div class="comment-wrapper {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
-                            <p class="comment-author">{{ comment.userid.username }}</p>
+                            <div class="flex gap-2 items-center">
+                                <div style="background-image: url('{{ asset(comment.userid.profilePicture) }}')" class="rounded-full bg-cover min-w-4 min-h-4"></div>
+                                <p class="comment-author">{{ comment.userid.username }}</p>
+                            </div>
                             <p>{{ comment.content }}</p>
                             <p class="self-end">{{ comment.createdat|date("d/m/Y") }}</p>
                         </div>

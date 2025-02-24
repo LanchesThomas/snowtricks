@@ -23,9 +23,10 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/trick/{id}', name: 'app_admin_trick_show',requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function show(int $id, ?Trick $trick, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/trick/{slug}', name: 'app_admin_trick_show',requirements: ['slug' => '[^/]++'], methods: ['GET', 'POST'])]
+    public function show(?string $slug, ?Trick $trick, Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository): Response
     {
+        $trick = $trickRepository->findOneBy(['slug' => $slug]);
         $comment = new Comment();
         $commentForm = $this->createForm(CommentType::class, $comment);
         $commentForm->handleRequest($request);
@@ -46,7 +47,7 @@ class TrickController extends AbstractController
                 $this->addFlash('danger', 'Une erreur est survenue lors de l\'envoi du commentaire.');
             }
         
-            return $this->redirectToRoute('app_admin_trick_show', ['id' => $id]);
+            return $this->redirectToRoute('app_admin_trick_show', ['slug' => $slug]);
         }
         
 

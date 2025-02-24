@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/trick')]
 class TrickController extends AbstractController
@@ -26,11 +27,13 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_admin_trick_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route('/{slug}/edit', name: 'app_admin_trick_edit', requirements: ['slug' => '[^/]++'], methods: ['GET', 'POST'])]
     #[Route('/new', name: 'app_admin_trick_new', methods: ['GET', 'POST'])]
     #[IsGranted('IS_AUTHENTICATED')]
-    public function manageTrick(?Trick $trick, Request $request, EntityManagerInterface $entityManager): Response
+    public function manageTrick(?String $slug, ?Trick $trick, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, TrickRepository $trickRepository): Response
     {
+        print($slug);
+        $trick = $trickRepository->findOneBy(['slug' => $slug]);
         // Déterminer si c'est une création ou une modification
         $isNew = !$trick; 
     
@@ -45,6 +48,8 @@ class TrickController extends AbstractController
                 $trick->setCreatedAt($trick->getCreatedAt() ?? new \DateTimeImmutable());
                 $trick->setUpdatedAt(new \DateTimeImmutable());
                 $trick->setUserId($this->getUser());
+                $slug = $slugger->slug($trick->getName())->lower();
+                $trick->setSlug($slug);
     
                 // Gérer l'upload des médias
                 $mediaForms = $form->get('media'); // Récupère la collection des médias
@@ -89,16 +94,18 @@ class TrickController extends AbstractController
 
     
 
-    #[Route('/{id}/delete', name: 'app_admin_trick_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route('/{slug}/delete', name: 'app_admin_trick_delete', requirements: ['slug' => '[^/]++'], methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED')]
-    public function delete(Trick $trick, Request $request, EntityManagerInterface $entityManager): Response
+    public function delete(?string $slug, ?Trick $trick, Request $request, EntityManagerInterface $entityManager, TrickRepository $trickRepository): Response
     {
+        $trick = $trickRepository->findOneBy(['slug' => $slug]);
+        
         // Vérifier le jeton CSRF pour éviter les suppressions non autorisées
         if (!$this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
             $this->addFlash('danger', 'Échec de la suppression. Jeton CSRF invalide.');
             return $this->redirectToRoute('app_home');
         }
-    
+        
         try {
             // Supprimer l'entité Trick
             $entityManager->remove($trick);
@@ -117,7 +124,7 @@ class TrickController extends AbstractController
     
 
     #[Route('/trick/{id}/media/{mediaId}/delete', name: 'app_trick_media_delete', methods: ['POST'])]
-    public function deleteMedia(int $id, int $mediaId, TrickRepository $trickRepository, MediaRepository $mediaRepository, EntityManagerInterface $entityManager): Response
+    public function deleteMedia(?String $slug, int $id, int $mediaId, TrickRepository $trickRepository, MediaRepository $mediaRepository, EntityManagerInterface $entityManager): Response
     {
         $trick = $trickRepository->find($id);
         $media = $mediaRepository->find($mediaId);
@@ -130,10 +137,11 @@ class TrickController extends AbstractController
         $trick->removeMedium($media); // Assurez-vous que cette méthode existe dans votre entité Trick
         $entityManager->remove($media); // Suppression de l'entité Media
         $entityManager->flush();
+        print($slug);
 
         $this->addFlash('success', 'L\'image a été supprimée avec succès.');
 
-        return $this->redirectToRoute('app_admin_trick_edit', ['id' => $id]);
+        return $this->redirectToRoute('app_home'); // Redirection après traitement
     }
 
 

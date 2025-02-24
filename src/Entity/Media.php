@@ -16,6 +16,10 @@ class Media
     #[ORM\Column(length: 500)]
     private ?string $url = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isVideo = false;
+
+
     #[ORM\ManyToOne(inversedBy: 'media')]
     #[ORM\JoinColumn(nullable: false)]
     private ?trick $trick = null;
@@ -36,6 +40,19 @@ class Media
 
         return $this;
     }
+
+    public function isVideo(): bool
+    {
+        return $this->isVideo;
+    }
+
+    public function setIsVideo(bool $isVideo): static
+    {
+        $this->isVideo = $isVideo;
+
+        return $this;
+    }
+
 
     public function getTrick(): ?trick
     {

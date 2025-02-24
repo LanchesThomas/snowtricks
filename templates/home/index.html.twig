@@ -7,7 +7,7 @@
 
 
 {% block body %}
-<script>
+<script type="module">
 loadMoreTricks();
 
 function loadMoreTricks() {
@@ -74,11 +74,11 @@ function loadMoreTricks() {
                             <div class="linear-g-absolute"></div>
                             </div>
                             <div class="trick-card-info">
-                                <a href="{{ path('app_admin_trick_show', {id: trick.id}) }}" class="trick-link hover:underline">{{trick.name}}</a>
+                                <a href="{{ path('app_admin_trick_show', {slug: trick.slug}) }}" class="trick-link hover:underline">{{trick.name}}</a>
                                 
                                 <div class="trick-card-icon-wrapper">
-                                    <a href="{{ path('app_admin_trick_edit', {id: trick.id}) }}"  class="trick-card-edit">{{ ux_icon('solar:pen-outline') }}</a>
-                                    <form method="post" action="{{ path('app_admin_trick_delete', {id: trick.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
+                                    <a href="{{ path('app_admin_trick_edit', {slug: trick.slug}) }}"  class="trick-card-edit">{{ ux_icon('solar:pen-outline') }}</a>
+                                    <form method="post" action="{{ path('app_admin_trick_delete', {slug: trick.slug}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trick ?');" >
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
                                         <button class="trick-card-delete">{{ ux_icon('guidance:bin') }}</button>
                                     </form>
@@ -87,8 +87,8 @@ function loadMoreTricks() {
                         </div>
                     {% endif %}
                     {% if not app.user %}
-                        <a href="{{ path('app_admin_trick_show', {id: trick.id}) }}" class="trick-card {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
-                            <div class="trick-card-image" style="background-image: url('{{ asset(trick.media[0].url)}}')">
+                        <a href="{{ path('app_admin_trick_show', {slug: trick.slug}) }}" class="trick-card {{ page != 1 ? 'hide' : '' }}" data-page="{{ page }}">
+                            <div class="trick-card-image" style="background-image: url('{{ trick.media[0] is defined ? asset(trick.media[0].url) : asset('images/fond.jpg') }}')">
                             <div class="linear-g-absolute"></div>
                             </div>
                             <div class="trick-card-info">
