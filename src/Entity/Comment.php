@@ -27,7 +27,7 @@ class Comment
     private ?trick $trick = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?user $userId = null;
 
     public function getId(): ?int
