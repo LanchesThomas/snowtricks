@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié{% endblock %}
+
+{% block body %}
+<style>
+    .register-wrapper {
+        height: 75vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    body {
+        max-height: 100svh;
+    }
+
+</style>
+    {% for flash_error in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+<div class="container-standard">
+<div class="register-wrapper">
+    <h1 class="heading-1 black">Mot de passe oublié</h1>
+    <div class="col-12 col-md-6 m-auto border p-4 rounded bg-white">
+    {{ form_start(requestForm) }}
+        {{ form_row(requestForm.mail) }}
+        <div>
+            <small>
+                Entrez votre adresse e-mail et nous vous enverrons un
+lien pour réinitialiser votre mot de passe.
+            </small>
+        </div>
+
+        <button class="btn btn-primary">Envoyer</button>
+    {{ form_end(requestForm) }}
+    </div>
+</div>
+</div>
+{% endblock %}

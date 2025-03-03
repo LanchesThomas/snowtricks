@@ -23,7 +23,7 @@
     </style>
     <div class="container-standard">
     <div class="register-wrapper">
-    <h1 class="heading-1">Se connecter</h1>
+    <h1 class="heading-1 black">Se connecter</h1>
     <div class="col-12 col-md-6 m-auto border p-4 rounded bg-white">
     <form action="{{ path('app_login') }}" method="post">
         {% if error %}
@@ -41,6 +41,7 @@
         </div>
         <label for="password">Mot de passe</label>
         <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+        <small><a href="/reset-password" class="text-blue-700 hover:underline"> Mot de passe oublié ?</a>  </small>
 
         <input type="hidden" name="_csrf_token"
                value="{{ csrf_token('authenticate') }}"
@@ -57,7 +58,7 @@
         #}
 
         <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
+            Se connecter
         </button>
     </form>
     </div>
