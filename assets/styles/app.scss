@@ -285,6 +285,10 @@ body {
     border: 2px solid red;
 }
 
-.flash {
-    
+.navbar-menu {
+    transform: translateY(0%);
+  }
+
+  .navbar-menu.open {
+    transform: translateY(100%);
 }

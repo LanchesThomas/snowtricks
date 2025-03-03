@@ -9,12 +9,12 @@
             <nav class="flex gap-4 text-white font-bold">
                 <a href="/">Accueil</a>
                 {% if app.user %}
-                    <a href="/admin/trick/new">Tricks</a>
+                    <a href="/admin/trick/new">Ajouter</a>
                     <a href="{{ path('app_logout') }}">Déconnexion</a>
                 {% endif %}
                 {% if not app.user %}
-                <a href="/inscription">Inscription</a>
-                <a href="/connexion">Connexion</a>
+                    <a href="/inscription">Inscription</a>
+                    <a href="/connexion">Connexion</a>
                 {% endif %}
             </nav>
 
@@ -22,8 +22,8 @@
 
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+<script type="module">
+
     // Sélectionner le bouton et le menu
     var menuButton = document.getElementById('navbar-open');
     var menu = document.querySelector('.navbar-menu');
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             menu.classList.remove('open');
         });
     });
-});
+
 </script>
 
 <!-- MENU MOBILE -->
@@ -64,15 +64,15 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
     <div class="navbar-menu absolute bottom-0 w-full bg-cyan-950 z-[-1]">
         <nav class="flex flex-col items-end gap-4 text-white font-bold p-4" >
-            <a href="/?action=home">Accueil</a>
-            <a href="/?action=blog">Blog</a>
-
-                <a href="/?action=connexion">Connexion</a>
-                <a href="/?action=inscription">Inscription</a>
-
-
-                <a href="?action=logout" class="mt-4 p-2 rounded-md bg-cyan-600">Déconnexion</a>
-
+            <a href="/">Accueil</a>
+            {% if app.user %}
+                <a href="/admin/trick/new">Ajouter</a>
+                <a href="{{ path('app_logout') }}" class="mt-4 p-2 rounded-md bg-cyan-600">Déconnexion</a>
+            {% endif %}
+            {% if not app.user %}
+                <a href="/inscription">Inscription</a>
+                <a href="/connexion">Connexion</a>
+            {% endif %}
         </nav>
 
     </div>
