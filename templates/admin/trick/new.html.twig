@@ -2,8 +2,36 @@
 
 {% set action = app.current_route == 'app_admin_trick_new' ? 'Ajout' : 'Édition' %}
 {% block title %}{{ action }} d'un trick{% endblock %}
+{% block head %}
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+{% endblock %}
 
 {% block body %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script type="module">
+var swiper = new Swiper(".swiper-trick", {
+            slidesPerView: 1,
+            spaceBetween: 16,
+            loop: true,
+            watchOverflow: true,
+            navigation: {
+                nextEl: ".swiper-next",
+                prevEl: ".swiper-prev",
+            },
+            breakpoints: {
+                767: {
+                    slidesPerView: 2,
+                },
+                992: {
+                    slidesPerView: 3,
+                }
+            }
+        });
+</script>
     <style>
         .form-wrapper {
             display: flex;
@@ -54,23 +82,43 @@
     </section>
     
     {% if action is same as "Édition" %}
-    <section class="trick-media-section">
-        <div class="container-standard">
-            <div class="grid-5">
-                {% for image in trick.media %}
-                <div class="trick-card relative h-[300px]">
-                    <img src="{{ image.url }}" class="trick-media-image object-cover h-full">
-                    <form method="post" action="{{ path('app_trick_media_delete', { id: trick.id, mediaId: image.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');" class="z-10">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ image.id) }}">
-                        <button type="submit" class="absolute bottom-1 right-1 p-1 bg-red-500 rounded-md w-8 h-8">
-                            {{ ux_icon('guidance:bin') }}
+        {% if trick.media %}
+            <section class="trick-media-section">
+                <div class="container-standard relative">
+                    <div class="grid-5 swiper swiper-trick">
+                        <div class="swiper-wrapper">
+                            {% for media in trick.media %}
+                                <div class="trick-card relative h-[300px] swiper-slide object-cover"> 
+                                    {% if media.isVideo %}
+                                        <iframe 
+                                            width="100%" height="100%" 
+                                            src="https://www.youtube.com/embed/{{ media.videoUrl | slice(17) }}" 
+                                            title="Vidéo du trick" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                            referrerpolicy="strict-origin-when-cross-origin" 
+                                            allowfullscreen>
+                                        </iframe>
+                                    {% else %}
+                                        <img src="{{ media.url }}" class="object-cover h-full">
+                                        
+                                    {% endif %}
+                                    <form method="post" action="{{ path('app_trick_media_delete', { id: media.id, mediaId: media.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?');" class="z-10">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ media.id) }}">
+                                    <button type="submit" class="absolute bottom-1 right-1 p-1 bg-red-500 rounded-md w-8 h-8">
+                                        {{ ux_icon('guidance:bin') }}
                         </button>
                     </form>
-                    <div class="linear-g-absolute"></div>
+                                    <div class="linear-g-absolute"></div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="swiper-next">{{ ux_icon('material-symbols-light:chevron-right') }}</div>
+                    <div class="swiper-prev">{{ ux_icon('material-symbols-light:chevron-left') }}</div>
                 </div>
-                {% endfor %}
-        </div>
-    </section>
+            </section>
+        {% endif %}
     {% endif %}
 
     <script>

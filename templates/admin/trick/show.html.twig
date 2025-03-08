@@ -175,7 +175,7 @@ function loadMoreComments() {
     </section>
 
     {% set page = 1 %}
-    {% set commentsPerPage = 3 %}
+    {% set commentsPerPage = 10 %}
     {% set totalPages = (trick.comments|length/commentsPerPage)|round(0, 'ceil') %}
 
     <section class="comments-section">
