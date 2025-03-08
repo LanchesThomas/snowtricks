@@ -1,0 +1,1 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d38ae93178b34c72a29d40d03481ad41)](https://app.codacy.com/gh/LanchesThomas/snowtricks/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
