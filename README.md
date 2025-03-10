@@ -37,8 +37,8 @@ Avant de commencer, assurez-vous d'avoir installé :
 Dans un terminal, exécutez :
 
 ```bash
-git clone https://github.com/utilisateur/nom-du-repo.git
-cd nom-du-repo
+git clone https://github.com/LanchesThomas/snowtricks.git
+cd snowtricks
 ```
 
 ## 2️⃣ Installer les dépendances Symfony
@@ -67,8 +67,6 @@ Remplacez :
 - motdepasse → votre mot de passe PostgreSQL.
 
 ## 4️⃣ Créer la base de données
-
-Si la base de données n'existe pas encore, créez-la avec la commande :
 
 ```bash
 symfony console doctrine:database:create
