@@ -292,3 +292,23 @@ body {
   .navbar-menu.open {
     transform: translateY(100%);
 }
+
+.top-button {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    cursor: pointer;
+    display: none;
+
+    &:hover {
+        background-color: black;
+        color: white;
+    }
+}
