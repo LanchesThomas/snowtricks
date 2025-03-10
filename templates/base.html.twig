@@ -22,7 +22,7 @@
         {% endblock %}
             <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
+    <body class="relative">
         {% block header %}
             {% include 'header.html.twig' %}
         {% endblock %}
@@ -35,5 +35,24 @@
             {% include 'footer.html.twig' %}
         {% endblock %}
 
+    <div class="top-button" id="scrollToTopBtn">
+    {{ ux_icon('bx:up-arrow-alt') }}
+    </div>
+
+    <script type="module">
+    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 300) {
+            scrollToTopBtn.style.display = "block";
+        } else {
+            scrollToTopBtn.style.display = "none";
+        }
+    });
+
+    scrollToTopBtn.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    </script>
     </body>
 </html>
